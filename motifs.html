@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Protein Sequence Checker and Motif Finder</title>
+  <style>
+    /* Style for the highlighted motifs */
+    .highlight {
+      background-color: yellow;
+    }
+  </style>
+</head>
+<body>
+  <form>
+    <label>Protein Sequence:</label>
+    <input type="text" id="sequence" name="sequence">
+    <br>
+    <label>Motif:</label>
+    <input type="text" id="motif" name="motif">
+    <br>
+    <button type="button" onclick="findMotif()">Submit</button>
+  </form>
+  <div id="results"></div>
+  <br>
+  <div id="highlighted-sequence"></div>
+
+  <script>
+    function findMotif() {
+      var sequence = document.getElementById("sequence").value;
+      var motif = document.getElementById("motif").value;
+      var results = document.getElementById("results");
+      var highlightedSequence = document.getElementById("highlighted-sequence");
+
+      //Validate the sequence and motif
+      if (!/^[ACDEFGHIKLMNPQRSTVWY]+$/i.test(sequence)) {
+        results.innerHTML = "Invalid protein sequence. Only A, C, D, E, F, G, H, I, K, L, M, N, P, Q, R, S, T, V, W, and Y are allowed.";
+        highlightedSequence.innerHTML = "";
+        return;
+      }
+      if (!/^[ACDEFGHIKLMNPQRSTVWY]+$/i.test(motif)) {
+        results.innerHTML = "Invalid motif. Only A, C, D, E, F, G, H, I, K, L, M, N, P, Q, R, S, T, V, W, and Y are allowed.";
+        highlightedSequence.innerHTML = "";
+        return;
+      }
+      if(motif.length > sequence.length){
+        results.innerHTML = "Motif length cannot be greater than sequence length.";
+        highlightedSequence.innerHTML = "";
+        return;
+      }
+
+      //Search for repeated motifs and their positions
+      var count = 0;
+      var positions = [];
+      for (var i = 0; i < sequence.length - motif.length + 1; i++) {
+        if (sequence.substr(i, motif.length) == motif) {
+          count++;
+          positions.push(i);
+        }
+      }
+      results.innerHTML = "Motif '" + motif + "' was found " + count + " times at positions: " + positions.join(", ") + ".";
+
+      // Highlight the motifs in the sequence
+      var sequenceWithHighlight = "";
+      var lastIndex = 0;
+      for (var i = 0; i < positions.length; i++) {
+        var start = positions[i];
+        var end = start + motif.length;
+        sequenceWithHighlight += sequence.substring(lastIndex, start);
+        var highlightedMotif = "<span class='highlight'>" + sequence.substring(start, end) + "</span>";
+        sequenceWithHighlight += highlightedMotif;
+        lastIndex = end;
+      }
+      sequenceWithHighlight += sequence.substring(lastIndex);
+      highlightedSequence.innerHTML = sequenceWithHighlight;
+    }
+  </script>
+</body>
+</html>
