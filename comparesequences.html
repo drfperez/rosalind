@@ -1,19 +1,6 @@
 <html>
   <head>
-    <title>Protein Sequence Comparison</title>    
-    <style>
-      .mutation {
-        color: red;
-      }
-      .deletion {
-        color: blue;
-        text-decoration: line-through;
-      }
-      .insertion {
-        color: green;
-        text-decoration: underline;
-      }
-    </style>
+    <title>Protein Sequence Comparison</title>
     <script>
         function compareSequences(){
           var sequence1 = document.getElementById("sequence1").value;
@@ -21,6 +8,7 @@
           var mutations = 0;
           var insertions = 0;
           var deletions = 0;
+          var common = 0;
           var result = "";
           var differenceDisplay = document.getElementById("difference-display");
           differenceDisplay.innerHTML = "";
@@ -38,8 +26,12 @@
                 }
             } else {
               differenceDisplay.innerHTML += sequence1[i];
+              common++;
             }
           }
+          var tanimotoIndex = common / (sequence1.length + sequence2.length - common);
+          result = "Mutations: " + mutations + ", Insertions: " + insertions + ", Deletions: " + deletions + "<br> Tanimoto Index: " + tanimotoIndex;
+          document.getElementById("result").innerHTML = result;
         }
     </script>
   </head>
