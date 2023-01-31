@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>DNA to Protein Translation</title>
+    <style>
+      /* some basic styling for the page */
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding: 50px;
+      }
+
+  /* styling for the form and input fields */
+  form {
+    margin: 0 auto;
+    text-align: left;
+    width: 300px;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+  }
+  input[type="button"] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+padding: 14px 20px;
+margin: 8px 0;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+}
+/* styling for the result display */
+#result {
+margin: 50px auto;
+width: 300px;
+text-align: center;
+font-size: 1.2em;
+}
+</style>
+
+  </head>
+  <body>
+    <h1>DNA to Protein Translation</h1>
+    <form>
+      DNA Sequence: <input type="text" id="dna_sequence"><br>
+      <input type="button" value="Translate" onclick="translateDNA()">
+    </form>
+    <p id="result"></p>
+
+<script>
+  // Object that stores the RNA codon to amino acid mapping
+  var codonTable = {
+    "UUU": "F", "UUC": "F", "UUA": "L", "UUG": "L",
+    "UCU": "S", "UCC": "S", "UCA": "S", "UCG": "S",
+    "UAU": "Y", "UAC": "Y", "UAA": "STOP", "UAG": "STOP",
+    "UGU": "C", "UGC": "C", "UGA": "STOP", "UGG": "W",
+    "CUU": "L", "CUC": "L", "CUA": "L", "CUG": "L",
+    "CCU": "P", "CCC": "P", "CCA": "P", "CCG": "P",
+    "CAU": "H", "CAC": "H", "CAA": "Q", "CAG": "Q",
+    "CGU": "R", "CGC": "R", "CGA": "R", "CGG": "R",
+    "AUU": "I", "AUC": "I", "AUA": "I", "AUG": "M",
+    "ACU": "T", "ACC": "T", "ACA": "T", "ACG": "T",
+    "AAU": "N", "AAC": "N", "AAA": "K", "AAG": "K",
+    "AGU": "S", "AGC": "S", "AGA": "R", "AGG": "R",
+    "GUU": "V", "GUC": ""G", "GUA": "V", "GUG": "V",
+"GCU": "A", "GCC": "A", "GCA": "A", "GCG": "A",
+"GAU": "D", "GAC": "D", "GAA": "E", "GAG": "E",
+"GGU": "G", "GGC": "G", "GGA": "G", "GGG": "G"
+}
+
+
+  function translateDNA() {
+    var dnaSequence = document.getElementById("dna_sequence").value;
+    dnaSequence= dnaSequence.toUpperCase();
+    if (!validateDNA(dnaSequence)) {
+      alert("Invalid DNA sequence. Please enter a valid DNA sequence.");
+      return;
+    }
+    var complementarySequence = dnaSequence.replace(/A/g, "t").replace(/T/g, "a").replace(/C/g, "g").replace(/G/g, "c").toUpperCase();
+    var rnaSequence = "";
+    for (var i = 0; i < dnaSequence.length; i++) {
+      if (complementarySequence[i] === "T") {
+        rnaSequence += "U";
+      } else {
+        rnaSequence += complementarySequence[i];
+      }
+    }
+    var proteinSequence = "";
+    for (i = 0; i < rnaSequence.length; i += 3) {
+      var codon = rnaSequence.substring(i, i + 3);
+      var aminoAcid = codonTable[codon];
+      if (aminoAcid === "STOP") {
+        break;
+      }
+      proteinSequence += aminoAcid;
+    }
+    document.getElementById("result").innerHTML = proteinSequence;
+  }
+
+  function validateDNA(dnaSequence) {
+    var validDNA = /^[ATCGatcg]+$/;
+    return validDNA.test(dnaSequence);
+  }
+</script>
+  </body>
+</html>
