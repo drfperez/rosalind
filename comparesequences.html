@@ -1,6 +1,19 @@
 <html>
   <head>
-    <title>Protein Sequence Comparison</title>
+    <title>Protein Sequence Comparison</title>    
+    <style>
+      .mutation {
+        color: red;
+      }
+      .deletion {
+        color: blue;
+        text-decoration: line-through;
+      }
+      .insertion {
+        color: green;
+        text-decoration: underline;
+      }
+    </style>
     <script>
         function compareSequences(){
           var sequence1 = document.getElementById("sequence1").value;
@@ -9,19 +22,24 @@
           var insertions = 0;
           var deletions = 0;
           var result = "";
-          for(var i = 0; i < sequence1.length; i++) {
+          var differenceDisplay = document.getElementById("difference-display");
+          differenceDisplay.innerHTML = "";
+          for(var i = 0; i < sequence2.length; i++) {
             if(sequence1[i] !== sequence2[i]) {
-                if(sequence1.length < sequence2.length) {
+                if(!sequence1[i]) {
                     insertions++;
+                    differenceDisplay.innerHTML += '<span style="color: green;">' + sequence2[i] + ' (' + (i+1) + ')' + '</span>';
                 } else if(sequence1.length > sequence2.length) {
                     deletions++;
+                    differenceDisplay.innerHTML += '<span style="color: blue;">' + sequence1[i] + ' (' + (i+1) + ')' + '</span>';
                 } else {
                     mutations++;
+                    differenceDisplay.innerHTML += '<span style="color: red;">' + sequence1[i] + ' (' + (i+1) + ')' + '</span>';
                 }
+            } else {
+              differenceDisplay.innerHTML += sequence1[i];
             }
           }
-          result = "Mutations: " + mutations + ", Insertions: " + insertions + ", Deletions: " + deletions;
-          document.getElementById("result").innerHTML = result;
         }
     </script>
   </head>
@@ -34,5 +52,6 @@
       <input type="button" value="Compare Sequences" onclick="compareSequences()">
     </form>
     <div id="result"></div>
+    <div id="difference-display"></div>
   </body>
 </html>
