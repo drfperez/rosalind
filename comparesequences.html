@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <title>Protein Sequence Comparison</title>
+    <script>
+        function compareSequences(){
+          var sequence1 = document.getElementById("sequence1").value;
+          var sequence2 = document.getElementById("sequence2").value;
+          var mutations = 0;
+          var insertions = 0;
+          var deletions = 0;
+          var result = "";
+          for(var i = 0; i < sequence1.length; i++) {
+            if(sequence1[i] !== sequence2[i]) {
+                if(sequence1.length < sequence2.length) {
+                    insertions++;
+                } else if(sequence1.length > sequence2.length) {
+                    deletions++;
+                } else {
+                    mutations++;
+                }
+            }
+          }
+          result = "Mutations: " + mutations + ", Insertions: " + insertions + ", Deletions: " + deletions;
+          document.getElementById("result").innerHTML = result;
+        }
+    </script>
+  </head>
+  <body>
+    <form>
+      <label for="sequence1">Protein Sequence 1:</label>
+      <textarea id="sequence1" name="sequence1"></textarea><br>
+      <label for="sequence2">Protein Sequence 2:</label>
+      <textarea id="sequence2" name="sequence2"></textarea><br>
+      <input type="button" value="Compare Sequences" onclick="compareSequences()">
+    </form>
+    <div id="result"></div>
+  </body>
+</html>
