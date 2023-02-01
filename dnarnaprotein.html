@@ -10,22 +10,22 @@
         padding: 50px;
       }
 
-  /* styling for the form and input fields */
-  form {
-    margin: 0 auto;
-    text-align: left;
-    width: 300px;
-  }
-  input[type="text"] {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    box-sizing: border-box;
-  }
-  input[type="button"] {
-    width: 100%;
-    background-color: #4CAF50;
-    color: white;
+      /* styling for the form and input fields */
+      form {
+        margin: 0 auto;
+        text-align: left;
+        width: 300px;
+      }
+      input[type="text"] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        box-sizing: border-box;
+      }
+      input[type="button"] {
+        width: 100%;
+        background-color: #4CAF50;
+        color: white;
 padding: 14px 20px;
 margin: 8px 0;
 border: none;
@@ -48,7 +48,8 @@ font-size: 1.2em;
       DNA Sequence: <input type="text" id="dna_sequence"><br>
       <input type="button" value="Translate" onclick="translateDNA()">
     </form>
-    <p id="result"></p>
+
+<p id="result"></p>
 
 <script>
   // Object that stores the RNA codon to amino acid mapping
@@ -65,44 +66,45 @@ font-size: 1.2em;
     "ACU": "T", "ACC": "T", "ACA": "T", "ACG": "T",
     "AAU": "N", "AAC": "N", "AAA": "K", "AAG": "K",
     "AGU": "S", "AGC": "S", "AGA": "R", "AGG": "R",
-    "GUU": "V", "GUC": ""G", "GUA": "V", "GUG": "V",
-"GCU": "A", "GCC": "A", "GCA": "A", "GCG": "A",
-"GAU": "D", "GAC": "D", "GAA": "E", "GAG": "E",
-"GGU": "G", "GGC": "G", "GGA": "G", "GGG": "G"
-}
-
+    "GUU": "V", "GUC": "V", "GUA": "V", "GUG": "V",
+    "GCU": "A", "GCC": "A", "GCA": "A", "GCG": "A",
+    "GAU": "D", "GAC": "D", "GAA": "E", "GAG": "E",
+    "GGU": "G", "GGC": "G", "GGA": "G", "GGG": "G"
+  }
 
   function translateDNA() {
     var dnaSequence = document.getElementById("dna_sequence").value;
     dnaSequence= dnaSequence.toUpperCase();
-    if (!validateDNA(dnaSequence)) {
-      alert("Invalid DNA sequence. Please enter a valid DNA sequence.");
-      return;
-    }
-    var complementarySequence = dnaSequence.replace(/A/g, "t").replace(/T/g, "a").replace(/C/g, "g").replace(/G/g, "c").toUpperCase();
-    var rnaSequence = "";
-    for (var i = 0; i < dnaSequence.length; i++) {
-      if (complementarySequence[i] === "T") {
-        rnaSequence += "U";
-      } else {
-        rnaSequence += complementarySequence[i];
-      }
-    }
-    var proteinSequence = "";
-    for (i = 0; i < rnaSequence.length; i += 3) {
-      var codon = rnaSequence.substring(i, i + 3);
-      var aminoAcid = codonTable[codon];
-      if (aminoAcid === "STOP") {
-        break;
-      }
-      proteinSequence += aminoAcid;
-    }
-    document.getElementById("result").innerHTML = proteinSequence;
-  }
+if (!validateDNA(dnaSequence)) {
+alert("Invalid DNA sequence. Please enter a valid DNA sequence.");
+return;
+}
+/*if (dnaSequence.length % 3 !== 0) {
+  alert("The length of the DNA sequence is not a multiple of 3. Please enter a valid DNA sequence.");
+  return;
+}
+*/
+var complementarySequence = dnaSequence.replace(/A/g, "t").replace(/T/g, "a").replace(/C/g, "g").replace(/G/g, "c").toUpperCase();
+var rnaSequence = complementarySequence.replace(/T/g, "U");
+var proteinSequence = "";
+for (var i = 0; i < rnaSequence.length; i += 3) {
+var codon = rnaSequence.substring(i, i + 3);
+if (codonTable[codon] === "STOP") {
+break;
+}
+proteinSequence += codonTable[codon];
+}
+document.getElementById("result").innerHTML = "Complementary DNA Sequence: " + complementarySequence + "<br>" + "RNA Sequence: " + rnaSequence + "<br>" + "Protein Sequence: " + proteinSequence;
+}
+if (rnaSequence.length % 3 !== 0) {
+  var incompleteCodonLength = rnaSequence.length % 3;
+  var proteinSequence = proteinSequence.slice(0, -incompleteCodonLength);
+  document.getElementById("protein_sequence").innerHTML = proteinSequence;
+}
 
-  function validateDNA(dnaSequence) {
-    var validDNA = /^[ATCGatcg]+$/;
-    return validDNA.test(dnaSequence);
+  function validateDNA(sequence) {
+    var validDNA = /^[ATGCatgc]+$/;
+    return validDNA.test(sequence);
   }
 </script>
   </body>
